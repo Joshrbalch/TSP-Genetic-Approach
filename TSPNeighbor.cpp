@@ -6,7 +6,7 @@
 using namespace std;
 
 // Function to solve the TSP using naive neighbor search
-int tsp(const vector<vector<int>>& graph, int start) {
+int tspNeighbor(const vector<vector<int>>& graph, int start) {
     int n = graph.size();
     vector<int> markedCities(n, 0);
     markedCities[start] = 1;
@@ -23,7 +23,7 @@ int tsp(const vector<vector<int>>& graph, int start) {
         if(i == n - 1) {
             nextCity = start;
             minCost += graph[prevCity][nextCity];
-            cout << "Traveling home from city " << prevCity <<": " << graph[prevCity][nextCity] << endl;
+            // cout << "Traveling home from city " << prevCity <<": " << graph[prevCity][nextCity] << endl;
             break;
         }
 
@@ -49,7 +49,7 @@ int tsp(const vector<vector<int>>& graph, int start) {
         }
 
         minCost += graph[prevCity][nextCity];
-        cout << "Traveling from city " << prevCity << " to city " << nextCity << ": " << graph[prevCity][nextCity] << endl;
+        // cout << "Traveling from city " << prevCity << " to city " << nextCity << ": " << graph[prevCity][nextCity] << endl;
         prevCity = nextCity;
         markedCities[nextCity] = 1;
     } 
