@@ -1,14 +1,29 @@
-#include "TSPNeighbor.cpp"
-#include "TSPBrute.cpp"
-#include "randomMatrix.cpp"
-#include "TSPHeuristics.cpp"
+#include "TSPAlgorithms.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>
 
+// Example array for testing
+        // {
+        //     {0, 10, 15, 20},
+        //     {10, 0, 35, 25},
+        //     {15, 35, 0, 30},
+        //     {20, 25, 30, 0}
+        // };
+
+using namespace std;
+
 int main() {
-    int numNodes;
     string input;
+    bool bruteForce = false;
+    int numNodes, startCity, minCostBrute, minCost, minCostSSSP;
+
+    cout << "Include the slow brute force algorithm? (y/n): ";
+    cin >> input;
+
+    if(input == "y") {
+        bruteForce = true;
+    }
 
     while(true) {
         cout << "Enter the number of nodes: ";
@@ -23,23 +38,22 @@ int main() {
             }
         }
 
-        // Example usage
-        // {
-        //     {0, 10, 15, 20},
-        //     {10, 0, 35, 25},
-        //     {15, 35, 0, 30},
-        //     {20, 25, 30, 0}
-        // };
-
         vector<vector<int>> graph = generateMatrix(numNodes); 
         
-        int startCity = 0;
-        int minCost = tspNeighbor(graph, startCity);
-        int minCostBrute = tspBrute(graph, startCity);
-        int minCostSSSP = tspSSSP(graph);
+        startCity = 0;
+
+        if(bruteForce) {
+            minCostBrute = tspBrute(graph, startCity);
+        }
+
+        minCost = tspNeighbor(graph, startCity);
+        minCostSSSP = tspSSSP(graph);
+
+        if(bruteForce) {
+            cout << "Minimum cost using brute force: " << minCostBrute << endl;
+        }
 
         cout << "Minimum cost using neighbor search: " << minCost << endl;
-        cout << "Minimum cost using brute force: " << minCostBrute << endl;
         cout << "Minimum cost using heuristics: " << minCostSSSP << endl;
 
         cout << "Would you like to continue? (y/n): ";
