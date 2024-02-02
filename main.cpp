@@ -29,7 +29,7 @@ int main() {
         cout << "Enter the number of nodes: ";
         cin >> numNodes;
 
-        if(numNodes > 11) {
+        if(numNodes > 11 && bruteForce) {
             cout << "WARNING! This operation will take a large amount of time. Continue? (y/n): " << endl;
             cin >> input;
 
