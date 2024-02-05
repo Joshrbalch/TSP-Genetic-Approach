@@ -38,7 +38,7 @@ vector<vector<int>> generateMatrix(int numNodes) {
 //     std::cin >> numNodes;
 
 //     // Generate the random symmetric weighted matrix
-//     std::vector<std::vector<int>> weightedMatrix = generateSymmetricWeightedMatrix(numNodes);
+//     std::vector<std::vector<int>> weightedMatrix = generateMatrix(numNodes);
 
 //     // Display the generated symmetric weighted matrix
 //     std::cout << "Generated Random Symmetric Weighted Matrix:\n";

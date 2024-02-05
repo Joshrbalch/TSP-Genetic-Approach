@@ -1,3 +1,6 @@
+#ifndef TSPNEIGHBOR_CPP
+#define TSPNEIGHBOR_CPP
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -56,3 +59,5 @@ int tspNeighbor(const vector<vector<int>>& graph, int start) {
 
     return minCost;
 }
+
+#endif
