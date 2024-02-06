@@ -5,6 +5,7 @@
 #include "TSPHeuristics.cpp"
 #include "TSPNeighbor.cpp"
 #include "TSPNeighborAll.cpp"
+#include "city.cpp"
 
 #include "randomMatrix.cpp"
 

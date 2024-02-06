@@ -16,7 +16,7 @@ using namespace std;
 int main() {
     string input;
     bool bruteForce = false;
-    int numNodes, startCity, minCostBrute, minCost, minCostSSSP, minCostAll;
+    int numNodes, startCity, minCostBrute, minCost, minCostAll;
 
     cout << "Include the slow brute force algorithm? (y/n): ";
     cin >> input;
@@ -48,7 +48,9 @@ int main() {
 
         minCost = tspNeighbor(graph, startCity);
         minCostAll = tspNeighborAll(graph, startCity);
-        minCostSSSP = tspSSSP(graph);
+        tspHeuristics tspH;
+        tspH.run(graph, startCity);
+        int minCostSSSP = tspH.getCost();
 
         if(bruteForce) {
             cout << "Minimum cost using brute force: " << minCostBrute << endl;

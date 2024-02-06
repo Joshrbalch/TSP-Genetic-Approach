@@ -1,100 +1,94 @@
+#ifndef TSPHEURISTICS_CPP
+#define TSPHEURISTICS_CPP
+
 #include <iostream>
 #include <vector>
-#include <queue>
-#include <limits>
+#include <algorithm>
+#include <climits>
+#include "city.cpp"
 
 using namespace std;
 
-// Function to find the shortest path using Dijkstra's algorithm
-vector<int> dijkstra(const vector<vector<int>>& graph, int start) {
-    int n = graph.size();
-    vector<int> dist(n, numeric_limits<int>::max());
-    vector<bool> visited(n, false);
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+class tspHeuristics {
+    public: 
+    City* head;
 
-    dist[start] = 0;
-    pq.push({0, start});
+    tspHeuristics() {
+        head = nullptr;
+    }
+    
+    City* run (const vector<vector<int>>& graph, int start) {
+        head = new City(start, 0);
+        int n = graph.size();
+        vector<int> markedCities(n, 0);
+        markedCities[start] = 1;
 
-    while (!pq.empty()) {
-        int u = pq.top().second;
-        pq.pop();
+        int minCost = 0;
+        int prevCity = start;
+        City* currentCity = head;
 
-        if (visited[u]) {
-            continue;
-        }
+        // For each city, find the nearest neighbor
+        for(int i = 0; i < n; i++) {
+            int nextCity = INT_MAX;
 
-        visited[u] = true;
-
-        for (int v = 0; v < n; ++v) {
-            if (graph[u][v] != -1 && dist[u] + graph[u][v] < dist[v]) {
-                dist[v] = dist[u] + graph[u][v];
-                pq.push({dist[v], v});
+            // If we are at the last city, go back to the start
+            if(i == n - 1) {
+                nextCity = start;
+                minCost += graph[prevCity][nextCity];
+                currentCity->next = new City(nextCity, graph[prevCity][nextCity]);
+                break;
             }
-        }
-    }
 
-    return dist;
-}
+            //flag symbolizing if we are on the first iteration
+            bool flag = true;
 
-// Function to solve the TSP using SSSP combined with heuristics
-int tspSSSP(const vector<vector<int>>& graph) {
-    int n = graph.size();
-    vector<vector<int>> dist(n, vector<int>(n, -1));
+            for(int j = 0; j < n; j++) {
+                // If we are at the same city or we have already visited this city, skip it
+                if(j == prevCity || markedCities[j] == 1) {
+                    continue;
+                }
 
-    // Precompute the shortest distances between all pairs of vertices using Dijkstra's algorithm
-    for (int i = 0; i < n; ++i) {
-        dist[i] = dijkstra(graph, i);
-    }
-
-    std::vector<int> path;
-    std::vector<bool> visited(n, false);
-    int current = 0;
-    visited[current] = true;
-    path.push_back(current);
-
-    while (path.size() < n) {
-        int next = -1;
-        int minDist = std::numeric_limits<int>::max();
-
-        // Find the nearest unvisited neighbor using the precomputed distances
-        for (int i = 0; i < n; ++i) {
-            if (!visited[i] && dist[current][i] < minDist) {
-                minDist = dist[current][i];
-                next = i;
+                // If we are on the first iteration, set the next city to the first unvisited city
+                if(flag == true) {
+                    nextCity = j;
+                    flag = false;
+                }
+                
+                // If the distance to the current city is less than the distance to the next city, set the next city to the current city
+                else if(graph[prevCity][j] < graph[prevCity][nextCity]) {
+                    nextCity = j;
+                }
             }
-        }
 
-        if (next == -1) {
-            // No unvisited neighbors left, return to the starting vertex
-            path.push_back(0);
-            break;
-        }
+            minCost += graph[prevCity][nextCity];
+            // cout << "Traveling from city " << prevCity << " to city " << nextCity << ": " << graph[prevCity][nextCity] << endl;
 
-        visited[next] = true;
-        path.push_back(next);
-        current = next;
+            // Construct the linked list
+            currentCity->next = new City(nextCity, graph[prevCity][nextCity]);
+            currentCity = currentCity->next;
+
+            prevCity = nextCity;
+            markedCities[nextCity] = 1;
+        } 
+        return head;
     }
 
-    // Calculate the total distance of the TSP tour
-    int totalDistance = 0;
-    for (int i = 0; i < n - 1; ++i) {
-        totalDistance += graph[path[i]][path[i + 1]];
+    int getCost() {
+        int cost = 0;
+        City* currentCity = head;
+
+        while(currentCity->next != nullptr) {
+            cost += currentCity->distance;
+            currentCity = currentCity->next;
+        }
+
+        return cost;
     }
 
-    return totalDistance;
-}
+    // Destructor to release memory for the linked list
+    ~tspHeuristics() {
+        delete head;
+    }
+};
 
-// int main() {
-//     // Example usage
-//     std::vector<std::vector<int>> graph = {
-//         {0, 2, 9, 10},
-//         {1, 0, 6, 4},
-//         {15, 7, 0, 8},
-//         {6, 3, 12, 0}
-//     };
-
-//     int shortestDistance = tspWithHeuristics(graph);
-//     std::cout << "Shortest distance: " << shortestDistance << std::endl;
-
-//     return 0;
-// }
+#endif
