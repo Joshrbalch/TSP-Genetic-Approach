@@ -6,6 +6,7 @@
 #include "TSPNeighbor.cpp"
 #include "TSPNeighborAll.cpp"
 #include "city.cpp"
+#include "Graphs\inputGraph.cpp"
 
 #include "randomMatrix.cpp"
 

@@ -26,16 +26,25 @@ int main() {
     }
 
     while(true) {
-        cout << "Enter the number of nodes: ";
-        cin >> numNodes;
+        cout << "Would you like to generate a random graph? (y/n): ";
+        cin >> input;
 
-        if(numNodes > 11 && bruteForce) {
-            cout << "WARNING! This operation will take a large amount of time. Continue? (y/n): " << endl;
-            cin >> input;
+        if(input == "y") {
+            cout << "Enter the number of nodes: ";
+            cin >> numNodes;
 
-            if(input == "n") {
-                break;
-            }
+            vector<vector<int>> graph = generateMatrix(numNodes);
+        }
+
+        else if(input == "n") {
+            fInput file("Graphs/Size100.graph");
+            numNodes = file.numNodes;
+            vector<vector<int>> graph = file.graph;
+        }
+
+        else {
+            cout << "Invalid input. Please try again." << endl;
+            continue;
         }
 
         vector<vector<int>> graph = generateMatrix(numNodes); 
