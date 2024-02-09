@@ -15,6 +15,7 @@ using namespace std;
 
 int main() {
     string input;
+    vector<vector<int>> graph;
     bool bruteForce = false;
     int numNodes, startCity, minCostBrute, minCost, minCostAll;
 
@@ -33,21 +34,20 @@ int main() {
             cout << "Enter the number of nodes: ";
             cin >> numNodes;
 
-            vector<vector<int>> graph = generateMatrix(numNodes);
+            graph = generateMatrix(numNodes);
         }
 
         else if(input == "n") {
-            fInput file("Graphs/Size100.graph");
+            fInput file("Graphs/Size1000.graph");
             numNodes = file.numNodes;
-            vector<vector<int>> graph = file.graph;
+            graph = file.graph;
         }
 
         else {
             cout << "Invalid input. Please try again." << endl;
-            continue;
+            graph = generateMatrix(numNodes); 
+            return 0;
         }
-
-        vector<vector<int>> graph = generateMatrix(numNodes); 
         
         startCity = 0;
 
@@ -56,7 +56,7 @@ int main() {
         }
 
         minCost = tspNeighbor(graph, startCity);
-        minCostAll = tspNeighborAll(graph, startCity);
+        // minCostAll = tspNeighborAll(graph, startCity);
         tspHeuristics tspH;
         tspH.run(graph, startCity);
         int minCostSSSP = tspH.getCost();
@@ -66,7 +66,7 @@ int main() {
         }
 
         cout << "Minimum cost using neighbor search: " << minCost << endl;
-        cout << "Minimum cost using neighbor search (all): " << minCostAll << endl;
+        // cout << "Minimum cost using neighbor search (all): " << minCostAll << endl;
         cout << "Minimum cost using heuristics: " << minCostSSSP << endl;
 
         cout << "Would you like to continue? (y/n): ";
