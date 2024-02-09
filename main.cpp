@@ -37,7 +37,7 @@ int main() {
         }
 
         else if(input == "n") {
-            fInput file("Graphs/Size100.graph");
+            fInput file("Graphs/Size1000.graph");
             numNodes = file.numNodes;
             vector<vector<int>> graph = file.graph;
         }
@@ -56,7 +56,7 @@ int main() {
         }
 
         minCost = tspNeighbor(graph, startCity);
-        minCostAll = tspNeighborAll(graph, startCity);
+        // minCostAll = tspNeighborAll(graph, startCity);
         tspHeuristics tspH;
         tspH.run(graph, startCity);
         int minCostSSSP = tspH.getCost();
@@ -66,7 +66,7 @@ int main() {
         }
 
         cout << "Minimum cost using neighbor search: " << minCost << endl;
-        cout << "Minimum cost using neighbor search (all): " << minCostAll << endl;
+        // cout << "Minimum cost using neighbor search (all): " << minCostAll << endl;
         cout << "Minimum cost using heuristics: " << minCostSSSP << endl;
 
         cout << "Would you like to continue? (y/n): ";

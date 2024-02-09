@@ -12,13 +12,13 @@ using namespace std;
 int tspNeighbor(const vector<vector<int>>& graph, int start) {
     int n = graph.size();
     vector<int> markedCities(n, 0);
+    vector<int> path;
     markedCities[start] = 1;
 
     int minCost = 0;
     int prevCity = start;
 
     // For each city, find the nearest neighbor
-
     for(int i = 0; i < n; i++) {
         int nextCity = INT_MAX;
 
@@ -26,6 +26,7 @@ int tspNeighbor(const vector<vector<int>>& graph, int start) {
         if(i == n - 1) {
             nextCity = start;
             minCost += graph[prevCity][nextCity];
+            path.push_back(nextCity);
             // cout << "Traveling home from city " << prevCity <<": " << graph[prevCity][nextCity] << endl;
             break;
         }
@@ -50,12 +51,19 @@ int tspNeighbor(const vector<vector<int>>& graph, int start) {
                 nextCity = j;
             }
         }
-
         minCost += graph[prevCity][nextCity];
+        path.push_back(prevCity);
         // cout << "Traveling from city " << prevCity << " to city " << nextCity << ": " << graph[prevCity][nextCity] << endl;
         prevCity = nextCity;
         markedCities[nextCity] = 1;
     } 
+
+    // Print the path
+    cout << "Path: ";
+    for(int i = 0; i < path.size(); i++) {
+        cout << path[i] << " ";
+    }
+    cout << endl;
 
     return minCost;
 }
