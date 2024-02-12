@@ -51,7 +51,6 @@ int tspNeighbor(const vector<vector<int>>& graph, int start) {
                 nextCity = j;
             }
         }
-        
         minCost += graph[prevCity][nextCity];
         path.push_back(prevCity);
         // cout << "Traveling from city " << prevCity << " to city " << nextCity << ": " << graph[prevCity][nextCity] << endl;

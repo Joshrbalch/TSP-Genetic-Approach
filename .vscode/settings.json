@@ -4,6 +4,7 @@
         "iosfwd": "cpp",
         "vector": "cpp",
         "ostream": "cpp",
+<<<<<<< HEAD
         "*.tcc": "cpp",
         "array": "cpp",
         "atomic": "cpp",
@@ -48,5 +49,8 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeinfo": "cpp"
+=======
+        "*.tcc": "cpp"
+>>>>>>> 6c611a756b0c204a58ff2cc76e9968ac9a84f5b1
     }
 }
