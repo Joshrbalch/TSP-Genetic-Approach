@@ -1,3 +1,6 @@
+#ifndef TSPGENETIC_CPP
+#define TSPGENETIC_CPP
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -6,16 +9,13 @@
 #include <ctime>
 #include <cmath>
 #include <algorithm>
+#include "individual.cpp"
 
 using namespace std;
 
-#define V 1000  // Number of cities in TSP
-#define POP_SIZE 1000  // Initial population size for the algorithm
-
-struct individual {
-    vector<int> path;  // Store the path as a vector of integers
-    int fitness;
-};
+#define V 100  // Number of cities in TSP
+#define POP_SIZE 5000  // Initial population size for the algorithm
+#define ELITE_PERCENTAGE 0.1 // Percentage of elite individuals to preserve
 
 // Helper function to generate a random number between start and end
 int rand_num(int start, int end) {
@@ -87,7 +87,7 @@ bool lessthan(const individual& t1, const individual& t2) {
 // Genetic algorithm function for solving TSP
 individual TSPUtil(const vector<vector<int>>& map) {
     int gen = 1;
-    int gen_thres = 5;
+    int gen_thres = 100;
 
     vector<individual> population;
 
@@ -100,13 +100,25 @@ individual TSPUtil(const vector<vector<int>>& map) {
         population.push_back(temp);
     }
 
+    // Initialize the best solution variable
+    individual best_solution = population[0];
+
     // Main loop of genetic algorithm
     int temperature = 10000;
     while (temperature > 1000 && gen <= gen_thres) {
         sort(population.begin(), population.end(), lessthan);
         vector<individual> new_population;
 
-        for (int i = 0; i < POP_SIZE; i++) {
+        // Calculate the number of elite individuals to preserve
+        int elite_count = POP_SIZE * ELITE_PERCENTAGE;
+
+        // Copy the elite individuals directly into the new population
+        for (int i = 0; i < elite_count; i++) {
+            new_population.push_back(population[i]);
+        }
+
+        // Apply genetic operations to the remaining individuals
+        for (int i = elite_count; i < POP_SIZE; i++) {
             individual p1 = population[i];
             individual new_individual;
             new_individual.path = p1.path;
@@ -127,6 +139,11 @@ individual TSPUtil(const vector<vector<int>>& map) {
         population = new_population;
         gen++;
 
+        // Update the best solution if a new best is found
+        if (population[0].fitness < best_solution.fitness) {
+            best_solution = population[0];
+        }
+
         int mincost = INT_MAX;
 
         cout << "Generation: " << gen << endl;
@@ -145,41 +162,38 @@ individual TSPUtil(const vector<vector<int>>& map) {
 
     cout << "Population evolved successfully!" << endl;
 
-    individual mincostind = population[0];
-    for (const auto& ind : population) {
-        if (ind.fitness < mincostind.fitness) {
-            mincostind = ind;
-        }
-    }
-
-    cout << "Minimum path cost: " << mincostind.fitness << endl;
+    cout << "Minimum path cost: " << best_solution.fitness << endl;
     cout << "And Path is: ";
-    for (int city : mincostind.path) {
+
+    for (int city : best_solution.path) {
         cout << city << " ";
     }
+
     cout << endl;
 
-    return mincostind;
+    return best_solution;
 }
 
-int main() {
-    ifstream infile("Size100.graph");
-    if (!infile) {
-        cerr << "Error: Unable to open input file." << endl;
-        return 1;
-    }
+// int main() {
+//     ifstream infile("Size1000.graph");
+//     if (!infile) {
+//         cerr << "Error: Unable to open input file." << endl;
+//         return 1;
+//     }
 
-    vector<vector<int>> map(V, vector<int>(V));
-    for (int i = 0; i < V; ++i) {
-        for (int j = 0; j <= i; ++j) {
-            infile >> map[i][j];
-            map[j][i] = map[i][j]; // Since the graph is undirected, fill in the other half of the matrix
-        }
-    }
+//     vector<vector<int>> map(V, vector<int>(V));
+//     for (int i = 0; i < V; ++i) {
+//         for (int j = 0; j <= i; ++j) {
+//             infile >> map[i][j];
+//             map[j][i] = map[i][j]; // Since the graph is undirected, fill in the other half of the matrix
+//         }
+//     }
 
-    cout << "Adjacency matrix read successfully!" << endl;
+//     cout << "Adjacency matrix read successfully!" << endl;
 
-    individual p = TSPUtil(map);
+//     individual p = TSPUtil(map);
 
-    return 0;
-}
+//     return 0;
+// }
+
+#endif
