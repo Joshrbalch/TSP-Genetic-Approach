@@ -5,29 +5,40 @@
 
 using namespace std;
 
-vector<vector<int>> readAdjacencyMatrix(const string& input) {
-    istringstream iss(input);
-    vector<vector<int>> adjacencyMatrix;
-
-    string line;
-    while (getline(iss, line)) {
-        istringstream lineStream(line);
-        vector<int> row;
-        int value;
-        while (lineStream >> value) {
-            row.push_back(value);
-        }
-        adjacencyMatrix.push_back(row);
+vector<vector<int>> readAdjacencyMatrix(const string& filename, int& numNodes) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error: Unable to open file " << filename << endl;
+        exit(EXIT_FAILURE);
     }
 
-    return adjacencyMatrix;
+    vector<vector<int>> adjacencyList;
+
+    string line;
+    while (getline(file, line)) {
+        if (line.empty()) continue; // Skip empty lines
+        if (line == "0endl") break; // End of adjacency list marker
+
+        istringstream lineStream(line);
+        vector<int> neighbors;
+        int value;
+        while (lineStream >> value) {
+            neighbors.push_back(value);
+        }
+        adjacencyList.push_back(neighbors);
+        numNodes++;
+    }
+
+    return adjacencyList;
 }
+
 
 int main() {
     string input;
     vector<vector<int>> graph;
     bool bruteForce = false;
     int numNodes, startCity, minCostBrute, minCost, minCostAll;
+    numNodes = 0;
 
     cout << "Include the slow brute force algorithm? (y/n): ";
     cin >> input;
@@ -37,6 +48,7 @@ int main() {
     }
 
     while (true) {
+        numNodes = 0;
         cout << "Would you like to generate a random graph? (y/n): ";
         cin >> input;
 
@@ -45,19 +57,28 @@ int main() {
             cin >> numNodes;
 
             graph = generateMatrix(numNodes);
+
+            for(int i = 0; i < numNodes; i++){
+                for(int j = 0; j < numNodes; j++){
+                    cout << graph[i][j] << " ";
+                }
+
+                cout << endl;
+            }
         } else if (input == "n") {
-            graph = readAdjacencyMatrix("size100.graph");
+            graph = readAdjacencyMatrix("size100.graph", numNodes);
+            cout << numNodes << endl;
         } else {
             cout << "Invalid input. Please try again." << endl;
             graph = generateMatrix(numNodes);
             return 0;
         }
 
-
         startCity = 0;
 
         // Perform TSP using the genetic algorithm
-        individual geneticResult = TSPUtil(graph);
+        TSPGenetic geneticAlgorithm(numNodes);
+        individual geneticResult = geneticAlgorithm.TSPUtil(graph);;
         minCost = geneticResult.fitness;
 
         if (bruteForce) {
@@ -69,7 +90,7 @@ int main() {
         cout << "Minimum cost using genetic algorithm: " << minCost << endl;
 
         // Perform TSP using the nearest neighbor algorithm
-        minCostAll = tspNeighbor(graph, startCity);
+        minCostAll = tspNeighbor(graph, startCity, numNodes);
         cout << "Minimum cost using nearest neighbor: " << minCostAll << endl;
 
         cout << "Would you like to continue? (y/n): ";

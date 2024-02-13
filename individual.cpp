@@ -8,7 +8,7 @@ using namespace std;
 
 struct individual {
     vector<int> path;  // Store the path as a vector of integers
-    int fitness;
+    int fitness = 0;
 };
 
 #endif

@@ -9,10 +9,10 @@
 using namespace std;
 
 // Function to solve the TSP using naive neighbor search
-int tspNeighbor(const vector<vector<int>>& graph, int start) {
-    cout << "Solving TSP using naive neighbor search..." << endl; // Print a message when starting the neighbor search algorithm
-    int n = graph.size();
-    cout << n << endl;
+int tspNeighbor(const vector<vector<int>>& graph, int start, int numNodes) {
+    // cout << "Solving TSP using naive neighbor search..." << endl; // Print a message when starting the neighbor search algorithm
+    int n = numNodes;
+    // cout << n << endl;
 
     // cout << "Size of graph: " << n << endl; // Print the size of the graph
     vector<int> markedCities(n, 0);
@@ -24,7 +24,7 @@ int tspNeighbor(const vector<vector<int>>& graph, int start) {
 
     // For each city, find the nearest neighbor
     for(int i = 0; i < n; i++) {
-        cout << "City " << i << endl; // Print the current city
+        // cout << "City " << i << endl; // Print the current city
         int nextCity = -1; // Initialize nextCity to an invalid value
 
         // Initialize minDist to a very large value
