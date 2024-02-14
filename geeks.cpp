@@ -36,12 +36,16 @@ public:
         if(V <= 10) {
             POP_SIZE = 100;
             gen_thres = 100;
-        } else if(V <= 20) {
+        } 
+
+        else if(V <= 20) {
             POP_SIZE = pow(V, 2);
             gen_thres = pow(2, (V / 2));
-        } else {
-            POP_SIZE = V;
-            gen_thres = (V * 100) / 2;
+        } 
+
+        else {
+            POP_SIZE = V * 100;
+            gen_thres = (V * 100) / 10;
             ELITE_PERCENTAGE = 0.05;
         }
     }
@@ -179,10 +183,13 @@ public:
             }
 
             int mincost = INT_MAX;
+            int interval = pow(2, V);
 
-            cout << "Generation: " << gen << endl;
-            cout << "Population size: " << population.size() << endl;
-            cout << "Population lowest cost: ";
+            if(gen % interval == 0)
+                cout << "Generation: " << gen << endl;
+                cout << "Population size: " << population.size() << endl;
+                cout << "Population lowest cost: ";
+            
 
             for (int i = 0; i < population.size(); i++) {
                 if (cal_fitness(population[i].path, map) < mincost) {
