@@ -43,10 +43,16 @@ public:
             gen_thres = pow(2, (V / 2));
         } 
 
-        else {
+        else if(V <= 100){
             POP_SIZE = V * 100;
             gen_thres = (V * 100) / 10;
             ELITE_PERCENTAGE = 0.05;
+        }
+
+        else {
+            POP_SIZE = V / 2;
+            gen_thres = V;
+            ELITE_PERCENTAGE = 0.01;
         }
     }
 
