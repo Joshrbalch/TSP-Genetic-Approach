@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <sstream>
 #include "TSPAlgorithms.h" // Include the header file containing the genetic algorithm
 
 using namespace std;

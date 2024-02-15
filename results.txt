@@ -1,30 +1,39 @@
-Brute Force Algorithm: 132 (Time: 0 ms)
+Brute Force Algorithm: 219 (Time: 0 ms)
 Graph with 6 nodes:
-Genetic Algorithm: 116 (Time: 95 ms)
-Nearest Neighbor Algorithm: 132 (Time: 0 ms)
+Genetic Algorithm: 134 (Time: 322 ms)
+Nearest Neighbor Algorithm: 237 (Time: 0 ms)
 
-Brute Force Algorithm: 126 (Time: 0 ms)
+Brute Force Algorithm: 160 (Time: 0 ms)
 Graph with 7 nodes:
-Genetic Algorithm: 126 (Time: 99 ms)
-Nearest Neighbor Algorithm: 192 (Time: 0 ms)
+Genetic Algorithm: 96 (Time: 325 ms)
+Nearest Neighbor Algorithm: 166 (Time: 0 ms)
 
-Brute Force Algorithm: 211 (Time: 5 ms)
+Brute Force Algorithm: 183 (Time: 5 ms)
 Graph with 8 nodes:
-Genetic Algorithm: 189 (Time: 97 ms)
-Nearest Neighbor Algorithm: 243 (Time: 0 ms)
+Genetic Algorithm: 127 (Time: 325 ms)
+Nearest Neighbor Algorithm: 183 (Time: 0 ms)
 
-Brute Force Algorithm: 271 (Time: 51 ms)
+Brute Force Algorithm: 196 (Time: 51 ms)
 Graph with 9 nodes:
-Genetic Algorithm: 245 (Time: 102 ms)
-Nearest Neighbor Algorithm: 365 (Time: 0 ms)
+Genetic Algorithm: 153 (Time: 363 ms)
+Nearest Neighbor Algorithm: 338 (Time: 0 ms)
 
-Brute Force Algorithm: 174 (Time: 501 ms)
+Brute Force Algorithm: 187 (Time: 538 ms)
 Graph with 10 nodes:
-Genetic Algorithm: 131 (Time: 105 ms)
-Nearest Neighbor Algorithm: 219 (Time: 0 ms)
+Genetic Algorithm: 124 (Time: 359 ms)
+Nearest Neighbor Algorithm: 233 (Time: 0 ms)
 
-Brute Force Algorithm: 183 (Time: 5808 ms)
+Brute Force Algorithm: 247 (Time: 6116 ms)
 Graph with 11 nodes:
-Genetic Algorithm: 180 (Time: 81 ms)
-Nearest Neighbor Algorithm: 247 (Time: 0 ms)
+Genetic Algorithm: 179 (Time: 175 ms)
+Nearest Neighbor Algorithm: 290 (Time: 0 ms)
+
+Brute Force Algorithm: 248 (Time: 70928 ms)
+Graph with 12 nodes:
+Genetic Algorithm: 172 (Time: 388 ms)
+Nearest Neighbor Algorithm: 353 (Time: 0 ms)
+
+Graph with 112 nodes:
+Genetic Algorithm: 466 (Time: 114678 ms)
+Nearest Neighbor Algorithm: 533 (Time: 0 ms)
 
