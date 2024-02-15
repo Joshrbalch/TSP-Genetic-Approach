@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <algorithm>
 #include <chrono>
+#include <sstream>
 #include "TSPAlgorithms.h" // Include the header file containing the genetic algorithm
 
 using namespace std;
@@ -29,21 +31,8 @@ vector<vector<int>> readAdjacencyMatrix(const string& filename, int& numNodes) {
         adjacencyList.push_back(neighbors);
     }
 
-    // for(int i = 0; i < numNodes; i++){
-    //     for(int j = 0; j < numNodes; j++){
-    //         cout << adjacencyList[i][j] << " ";
-    //     }
-
-    //     cout << endl;
-    // }
-
     return adjacencyList;
 }
-
-#include <vector>
-#include <iostream>
-
-using namespace std;
 
 vector<vector<int>> makeSymmetric(const vector<vector<int>>& halfAdjacencyMatrix) {
     int n = halfAdjacencyMatrix.size();
@@ -60,87 +49,36 @@ vector<vector<int>> makeSymmetric(const vector<vector<int>>& halfAdjacencyMatrix
     return symmetricAdjacencyMatrix;
 }
 
-// int main() {
-//     // Example usage:
-//     vector<vector<int>> halfAdjacencyMatrix = {
-//         {0, 1, 2},
-//         {0, 0, 3},
-//         {0, 0, 0}
-//     };
-
-//     vector<vector<int>> symmetricAdjacencyMatrix = makeSymmetric(halfAdjacencyMatrix);
-
-//     // Output the symmetric adjacency matrix
-//     for (const auto& row : symmetricAdjacencyMatrix) {
-//         for (int val : row) {
-//             cout << val << " ";
-//         }
-//         cout << endl;
-//     }
-
-//     return 0;
-// }
-
-
-
 int main() {
+    ofstream outFile("results.txt"); // Open a file for writing results
+
     string input;
     vector<vector<int>> graph;
-    bool bruteForce = false;
+    bool bruteForce = true;
     int numNodes, startCity, minCostBrute, minCost, minCostAll;
-    numNodes = 0;
+    numNodes = 5;
 
-    cout << "Include the slow brute force algorithm? (y/n): ";
-    cin >> input;
-
-    if (input == "y") {
-        bruteForce = true;
-    }
-
-    while (true) {
-        numNodes = 0;
-        cout << "Would you like to generate a random graph? (y/n): ";
-        cin >> input;
-
-        if (input == "y") {
-            cout << "Enter the number of nodes: ";
-            cin >> numNodes;
-
-            graph = generateMatrix(numNodes);
-
-            for(int i = 0; i < numNodes; i++){
-                for(int j = 0; j < numNodes; j++){
-                    cout << graph[i][j] << " ";
-                }
-
-                cout << endl;
-            }
-        } 
-        
-        else if (input == "n") {
-            cout << "Enter the number of nodes in the graph: ";
-            cin >> numNodes;
-            graph = readAdjacencyMatrix("size1000.graph", numNodes);
-            graph = makeSymmetric(graph);
-        } 
-        
-        else {
-            cout << "Invalid input. Please try again." << endl;
-            graph = generateMatrix(numNodes);
-            return 0;
+    for (int i = 0; i < 30; ++i) { // Loop to run 30 times
+        if(numNodes > 11) {
+            bruteForce = false;
+            numNodes += 100; // Increase number of nodes by 100 each iteration
         }
+        else {
+            numNodes++;
+        }
+
+        cout << "Generating graph with " << numNodes << " nodes..." << endl;
+        graph = generateMatrix(numNodes);
 
         startCity = 0;
 
         auto startGenetic = chrono::high_resolution_clock::now(); // Start the timer for genetic algorithm
-
-        // Perform TSP using the genetic algorithm
         TSPGenetic geneticAlgorithm(numNodes);
         individual geneticResult = geneticAlgorithm.TSPUtil(graph);
         minCost = geneticResult.fitness;
-
         auto stopGenetic = chrono::high_resolution_clock::now(); // Stop the timer for genetic algorithm
         auto durationGenetic = chrono::duration_cast<chrono::milliseconds>(stopGenetic - startGenetic); // Calculate the duration for genetic algorithm
+        
 
         if (bruteForce) {
             auto startBrute = chrono::high_resolution_clock::now(); // Start the timer for brute force algorithm
@@ -148,29 +86,24 @@ int main() {
             auto stopBrute = chrono::high_resolution_clock::now(); // Stop the timer for brute force algorithm
             auto durationBrute = chrono::duration_cast<chrono::milliseconds>(stopBrute - startBrute); // Calculate the duration for brute force algorithm
             cout << "Minimum cost using brute force: " << minCostBrute << " (Time: " << durationBrute.count() << " ms)" << endl;
+            outFile << "Brute Force Algorithm: " << minCostBrute << " (Time: " << durationBrute.count() << " ms)\n";
         }
 
-        cout << "Minimum cost using genetic algorithm: " << minCost << " (Time: " << durationGenetic.count() << " ms)" << endl;
-
         auto startNN = chrono::high_resolution_clock::now(); // Start the timer for nearest neighbor algorithm
-
-        // Perform TSP using the nearest neighbor algorithm
         minCostAll = tspNeighbor(graph, startCity, numNodes);
-
         auto stopNN = chrono::high_resolution_clock::now(); // Stop the timer for nearest neighbor algorithm
         auto durationNN = chrono::duration_cast<chrono::milliseconds>(stopNN - startNN); // Calculate the duration for nearest neighbor algorithm
 
+        cout << "Minimum cost using genetic algorithm: " << minCost << " (Time: " << durationGenetic.count() << " ms)" << endl;
         cout << "Minimum cost using nearest neighbor: " << minCostAll << " (Time: " << durationNN.count() << " ms)" << endl;
 
-        cout << "Would you like to continue? (y/n): ";
-        cin >> input;
-
-        if (input == "n") {
-            break;
-        } else {
-            cout << endl;
-        }
+        // Write results to the output file
+        outFile << "Graph with " << numNodes << " nodes:\n";
+        outFile << "Genetic Algorithm: " << minCost << " (Time: " << durationGenetic.count() << " ms)\n";
+        outFile << "Nearest Neighbor Algorithm: " << minCostAll << " (Time: " << durationNN.count() << " ms)\n";
+        outFile << endl;
     }
 
+    outFile.close(); // Close the output file
     return 0;
 }

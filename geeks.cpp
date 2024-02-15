@@ -1,5 +1,5 @@
-#ifndef TSPGENETIC_CPP
-#define TSPGENETIC_CPP
+#ifndef TSPGENETIC_H
+#define TSPGENETIC_H
 
 #include <iostream>
 #include <fstream>
@@ -9,6 +9,7 @@
 #include <ctime>
 #include <cmath>
 #include <algorithm>
+#include <random>
 #include "individual.cpp"
 
 using namespace std;
@@ -31,7 +32,7 @@ public:
 
     TSPGenetic(int v) {
         V = v;
-        ELITE_PERCENTAGE = 0.01;
+        ELITE_PERCENTAGE = 0.5;
         
         if(V <= 10) {
             POP_SIZE = 100;
@@ -44,15 +45,18 @@ public:
         } 
 
         else if(V <= 100){
-            POP_SIZE = V * 100;
-            gen_thres = (V * 100) / 10;
-            ELITE_PERCENTAGE = 0.05;
+            POP_SIZE = V * 10;
+            gen_thres = V * 100;
+        }
+
+        else if(V <= 500) {
+            POP_SIZE = V * 5;
+            gen_thres = V * 50;
         }
 
         else {
             POP_SIZE = V / 2;
-            gen_thres = V;
-            ELITE_PERCENTAGE = 0.01;
+            gen_thres = V * 5;
         }
     }
 
@@ -64,9 +68,10 @@ public:
 
     // Helper function to generate a random number between start and end
     int rand_num(int start, int end) {
-        int r = end - start;
-        int rnum = start + rand() % r;
-        return rnum;
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<int> dis(start, end - 1);
+        return dis(gen);
     }
 
     // Helper function to check if a character repeats in a string
@@ -76,10 +81,12 @@ public:
 
     // Helper function to mutate a path
     void mutatePath(vector<int>& path) {
-        int index1 = rand_num(1, V - 1);
-        int index2 = rand_num(1, V - 1);
+        int index1 = rand_num(1, path.size() - 2); // Adjusted range to avoid mutating the start and end cities
+        int index2 = rand_num(1, path.size() - 2); // Adjusted range to avoid mutating the start and end cities
+
         swap(path[index1], path[index2]);
     }
+
 
     // Helper function to create a random path
     vector<int> createPath() {
@@ -115,19 +122,47 @@ public:
 
             f += map[city1][city2];
         }
-
         return f;
     }
 
-    // Helper function to cool down the temperature
-    int cooldown(int temp) {
-        return (20 * temp) / 100;
+individual reproduce(individual parent1, individual parent2, const vector<vector<int>>& map) {
+    // cout << "Reproducing..." << endl;
+    
+    int start = rand_num(1, V - 2); // Adjusted the range to ensure it stays within bounds
+    int end = rand_num(start + 1, V - 1); // Ensures end is greater than start and within bounds
+    // cout << "Start: " << start << ", End: " << end << endl;
+    
+    vector<int> childPath;
+    vector<bool> taken(V, false); // A vector to mark which cities are already taken
+
+    // Copy the segment from parent1
+    for (int i = start; i <= end; i++) {
+        // cout << "Pushing " << parent1.path[i] << " from parent1" << endl;
+        childPath.push_back(parent1.path[i]);
+        taken[parent1.path[i]] = true; // Mark the city as taken
+        // cout << "Child path size after push: " << childPath.size() << endl;
     }
 
-    // Comparator function for sorting individuals by fitness
-    bool lessthan(const individual& t1, const individual& t2) {
-        return t1.fitness < t2.fitness;
+    // Copy the remaining cities from parent2
+    for (int i = 0; i < V; i++) {
+        if (!taken[parent2.path[i]]) {
+            // cout << "Pushing " << parent2.path[i] << " from parent2" << endl;
+            childPath.push_back(parent2.path[i]);
+            taken[parent2.path[i]] = true; // Mark the city as taken
+            // cout << "Child path size after push: " << childPath.size() << endl;
+        }
     }
+
+    // cout << "Creating child individual..." << endl;
+
+    individual child;
+    child.path = childPath;
+    child.fitness = cal_fitness(childPath, map);
+    return child;
+}
+
+
+
 
     // Genetic algorithm function for solving TSP
     individual TSPUtil(const vector<vector<int>>& map) {
@@ -148,7 +183,6 @@ public:
         shortestPathIndividual = population[0];
 
         // Main loop of genetic algorithm
-        int temperature = 10000;
         while (gen <= gen_thres) {
             sort(population.begin(), population.end(), [&](individual& t1, individual& t2) { return t1.fitness < t2.fitness; });
             vector<individual> new_population;
@@ -161,53 +195,47 @@ public:
                 new_population.push_back(population[i]);
             }
 
-            // Apply genetic operations to the remaining individuals
-            for (int i = elite_count; i < POP_SIZE; i++) {
-                individual p1 = population[i];
-                individual new_individual;
-                new_individual.path = p1.path;
-                mutatePath(new_individual.path);
-                new_individual.fitness = cal_fitness(new_individual.path, map);
-
-                if (new_individual.fitness <= population[i].fitness) {
-                    new_population.push_back(new_individual);
-                } else {
-                    float prob = exp(-1 * ((float)(new_individual.fitness - population[i].fitness) / temperature));
-                    if (prob > 0.5) {
-                        new_population.push_back(new_individual);
-                    }
-                }
+            // Reproduce the elite individuals to fill the rest of the population
+            for (int i = 0; i < elite_count; i++) {
+                int r = rand_num(0, population.size() - 1);
+                individual parent1 = population[r];
+                r = rand_num(0, population.size() - 1);
+                individual parent2 = population[r];
+                individual child = reproduce(parent1, parent2, map);
+                new_population.push_back(child);
             }
 
-            temperature = cooldown(temperature);
+
+            int mutations = rand() % (POP_SIZE / 2) + 1;
+
+            // Mutate a portion of the population
+            for (int i = 0; i < mutations; i++) {
+                individual mutatedIndividual = population[i];
+                mutatePath(mutatedIndividual.path);
+                mutatedIndividual.fitness = cal_fitness(mutatedIndividual.path, map);
+                new_population.push_back(mutatedIndividual);
+            }
+
+            //fill rest of population
+            while (new_population.size() < POP_SIZE) {
+                individual temp;
+                int random = rand() % POP_SIZE;
+                temp.path = population[random].path;
+                temp.fitness = population[random].fitness;
+                new_population.push_back(temp);
+            }
+
             population = new_population;
             gen++;
 
             // Update the best solution if a new best is found
             if (population[0].fitness < shortestPathIndividual.fitness) {
                 shortestPathIndividual = population[0];
+                cout << "Generation: " << gen << " Found a new Best Path: " << shortestPathIndividual.fitness << endl;
             }
-
-            int mincost = INT_MAX;
-            int interval = pow(2, V);
-
-            if(gen % interval == 0)
-                cout << "Generation: " << gen << endl;
-                cout << "Population size: " << population.size() << endl;
-                cout << "Population lowest cost: ";
-            
-
-            for (int i = 0; i < population.size(); i++) {
-                if (cal_fitness(population[i].path, map) < mincost) {
-                    mincost = cal_fitness(population[i].path, map);
-                }
-            }
-
-            cout << mincost << endl;
         }
 
         cout << "Population evolved successfully!" << endl;
-
         cout << "Minimum path cost: " << shortestPathIndividual.fitness << endl;
         cout << "And Path is: ";
 
