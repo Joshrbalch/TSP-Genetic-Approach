@@ -50,7 +50,7 @@ public:
         }
 
         else if(V <= 500) {
-            POP_SIZE = V * 5;
+            POP_SIZE = V;
             gen_thres = V * 50;
         }
 
