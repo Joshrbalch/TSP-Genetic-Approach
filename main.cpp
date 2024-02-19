@@ -30,14 +30,6 @@ vector<vector<int>> readAdjacencyMatrix(const string& filename, int& numNodes) {
         adjacencyList.push_back(neighbors);
     }
 
-    // for(int i = 0; i < numNodes; i++){
-    //     for(int j = 0; j < numNodes; j++){
-    //         cout << adjacencyList[i][j] << " ";
-    //     }
-
-    //     cout << endl;
-    // }
-
     return adjacencyList;
 }
 
@@ -60,29 +52,6 @@ vector<vector<int>> makeSymmetric(const vector<vector<int>>& halfAdjacencyMatrix
 
     return symmetricAdjacencyMatrix;
 }
-
-// int main() {
-//     // Example usage:
-//     vector<vector<int>> halfAdjacencyMatrix = {
-//         {0, 1, 2},
-//         {0, 0, 3},
-//         {0, 0, 0}
-//     };
-
-//     vector<vector<int>> symmetricAdjacencyMatrix = makeSymmetric(halfAdjacencyMatrix);
-
-//     // Output the symmetric adjacency matrix
-//     for (const auto& row : symmetricAdjacencyMatrix) {
-//         for (int val : row) {
-//             cout << val << " ";
-//         }
-//         cout << endl;
-//     }
-
-//     return 0;
-// }
-
-
 
 int main() {
     string input;
@@ -121,7 +90,7 @@ int main() {
         else if (input == "n") {
             cout << "Enter the number of nodes in the graph: ";
             cin >> numNodes;
-            graph = readAdjacencyMatrix("size1000.graph", numNodes);
+            graph = readAdjacencyMatrix("g15000.graph", numNodes);
             graph = makeSymmetric(graph);
         } 
         
@@ -136,12 +105,12 @@ int main() {
         auto startGenetic = chrono::high_resolution_clock::now(); // Start the timer for genetic algorithm
 
         // Perform TSP using the genetic algorithm
-        TSPGenetic geneticAlgorithm(numNodes);
-        individual geneticResult = geneticAlgorithm.TSPUtil(graph);
-        minCost = geneticResult.fitness;
+        // TSPGenetic geneticAlgorithm(numNodes);
+        // individual geneticResult = geneticAlgorithm.TSPUtil(graph);
+        // minCost = geneticResult.fitness;
 
-        auto stopGenetic = chrono::high_resolution_clock::now(); // Stop the timer for genetic algorithm
-        auto durationGenetic = chrono::duration_cast<chrono::milliseconds>(stopGenetic - startGenetic); // Calculate the duration for genetic algorithm
+        // auto stopGenetic = chrono::high_resolution_clock::now(); // Stop the timer for genetic algorithm
+        // auto durationGenetic = chrono::duration_cast<chrono::milliseconds>(stopGenetic - startGenetic); // Calculate the duration for genetic algorithm
 
         if (bruteForce) {
             auto startBrute = chrono::high_resolution_clock::now(); // Start the timer for brute force algorithm
@@ -151,12 +120,12 @@ int main() {
             cout << "Minimum cost using brute force: " << minCostBrute << " (Time: " << durationBrute.count() << " ms)" << endl;
         }
 
-        cout << "Minimum cost using genetic algorithm: " << minCost << " (Time: " << durationGenetic.count() << " ms)" << endl;
+        // cout << "Minimum cost using genetic algorithm: " << minCost << " (Time: " << durationGenetic.count() << " ms)" << endl;
 
         auto startNN = chrono::high_resolution_clock::now(); // Start the timer for nearest neighbor algorithm
-
+        individual nnResult = tspNeighborAll(graph, startCity, numNodes);
         // Perform TSP using the nearest neighbor algorithm
-        minCostAll = tspNeighbor(graph, startCity, numNodes);
+        minCostAll = nnResult.fitness;
 
         auto stopNN = chrono::high_resolution_clock::now(); // Stop the timer for nearest neighbor algorithm
         auto durationNN = chrono::duration_cast<chrono::milliseconds>(stopNN - startNN); // Calculate the duration for nearest neighbor algorithm

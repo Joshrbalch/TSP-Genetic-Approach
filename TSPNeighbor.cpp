@@ -5,11 +5,12 @@
 #include <vector>
 #include <algorithm>
 #include <climits>
+#include "individual.cpp"
 
 using namespace std;
 
 // Function to solve the TSP using naive neighbor search
-int tspNeighbor(const vector<vector<int>>& graph, int start, int numNodes) {
+individual tspNeighbor(const vector<vector<int>>& graph, int start, int numNodes) {
     // cout << "Solving TSP using naive neighbor search..." << endl; // Print a message when starting the neighbor search algorithm
     int n = numNodes;
     // cout << n << endl;
@@ -60,8 +61,10 @@ int tspNeighbor(const vector<vector<int>>& graph, int start, int numNodes) {
     //     cout << path[i] << " ";
     // }
     // cout << endl;
-
-    return minCost;
+    individual i;
+    i.path = path;
+    i.fitness = minCost;
+    return i;
 }
 
 

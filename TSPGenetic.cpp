@@ -1,6 +1,8 @@
 #ifndef TSPGENETIC_H
 #define TSPGENETIC_H
 
+// This algorithm was written by Joshua Balch at the University of Alabama
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -51,12 +53,12 @@ public:
 
         else if(V <= 500) {
             POP_SIZE = V;
-            gen_thres = V * 50;
+            gen_thres = V * 100;
         }
 
         else {
             POP_SIZE = V / 2;
-            gen_thres = V * 5;
+            gen_thres = V * 10;
         }
     }
 
@@ -125,44 +127,41 @@ public:
         return f;
     }
 
-individual reproduce(individual parent1, individual parent2, const vector<vector<int>>& map) {
-    // cout << "Reproducing..." << endl;
-    
-    int start = rand_num(1, V - 2); // Adjusted the range to ensure it stays within bounds
-    int end = rand_num(start + 1, V - 1); // Ensures end is greater than start and within bounds
-    // cout << "Start: " << start << ", End: " << end << endl;
-    
-    vector<int> childPath;
-    vector<bool> taken(V, false); // A vector to mark which cities are already taken
+    individual reproduce(individual parent1, individual parent2, const vector<vector<int>>& map) {
+        // cout << "Reproducing..." << endl;
+        
+        int start = rand_num(1, V - 2); // Adjusted the range to ensure it stays within bounds
+        int end = rand_num(start + 1, V - 1); // Ensures end is greater than start and within bounds
+        // cout << "Start: " << start << ", End: " << end << endl;
+        
+        vector<int> childPath;
+        vector<bool> taken(V, false); // A vector to mark which cities are already taken
 
-    // Copy the segment from parent1
-    for (int i = start; i <= end; i++) {
-        // cout << "Pushing " << parent1.path[i] << " from parent1" << endl;
-        childPath.push_back(parent1.path[i]);
-        taken[parent1.path[i]] = true; // Mark the city as taken
-        // cout << "Child path size after push: " << childPath.size() << endl;
-    }
-
-    // Copy the remaining cities from parent2
-    for (int i = 0; i < V; i++) {
-        if (!taken[parent2.path[i]]) {
-            // cout << "Pushing " << parent2.path[i] << " from parent2" << endl;
-            childPath.push_back(parent2.path[i]);
-            taken[parent2.path[i]] = true; // Mark the city as taken
+        // Copy the segment from parent1
+        for (int i = start; i <= end; i++) {
+            // cout << "Pushing " << parent1.path[i] << " from parent1" << endl;
+            childPath.push_back(parent1.path[i]);
+            taken[parent1.path[i]] = true; // Mark the city as taken
             // cout << "Child path size after push: " << childPath.size() << endl;
         }
+
+        // Copy the remaining cities from parent2
+        for (int i = 0; i < V; i++) {
+            if (!taken[parent2.path[i]]) {
+                // cout << "Pushing " << parent2.path[i] << " from parent2" << endl;
+                childPath.push_back(parent2.path[i]);
+                taken[parent2.path[i]] = true; // Mark the city as taken
+                // cout << "Child path size after push: " << childPath.size() << endl;
+            }
+        }
+
+        // cout << "Creating child individual..." << endl;
+
+        individual child;
+        child.path = childPath;
+        child.fitness = cal_fitness(childPath, map);
+        return child;
     }
-
-    // cout << "Creating child individual..." << endl;
-
-    individual child;
-    child.path = childPath;
-    child.fitness = cal_fitness(childPath, map);
-    return child;
-}
-
-
-
 
     // Genetic algorithm function for solving TSP
     individual TSPUtil(const vector<vector<int>>& map) {
@@ -204,7 +203,6 @@ individual reproduce(individual parent1, individual parent2, const vector<vector
                 individual child = reproduce(parent1, parent2, map);
                 new_population.push_back(child);
             }
-
 
             int mutations = rand() % (POP_SIZE / 2) + 1;
 
