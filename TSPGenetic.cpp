@@ -12,6 +12,7 @@
 #include <cmath>
 #include <algorithm>
 #include <random>
+#include "TSPAlgorithms.h"
 #include "individual.cpp"
 
 using namespace std;
@@ -57,7 +58,7 @@ public:
         }
 
         else {
-            POP_SIZE = V / 2;
+            POP_SIZE = V / 5;
             gen_thres = V * 10;
         }
     }
@@ -88,7 +89,6 @@ public:
 
         swap(path[index1], path[index2]);
     }
-
 
     // Helper function to create a random path
     vector<int> createPath() {
@@ -177,6 +177,8 @@ public:
             temp.fitness = cal_fitness(temp.path, map);
             population.push_back(temp);
         }
+
+        population[0] = tspNeighbor(map, 0, V);
 
         // Initialize the best solution variable
         shortestPathIndividual = population[0];

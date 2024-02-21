@@ -90,7 +90,7 @@ int main() {
         }
 
         auto startNN = chrono::high_resolution_clock::now(); // Start the timer for nearest neighbor algorithm
-        minCostAll = tspNeighbor(graph, startCity, numNodes);
+        minCostAll = tspNeighbor(graph, startCity, numNodes).fitness;
         auto stopNN = chrono::high_resolution_clock::now(); // Stop the timer for nearest neighbor algorithm
         auto durationNN = chrono::duration_cast<chrono::milliseconds>(stopNN - startNN); // Calculate the duration for nearest neighbor algorithm
 
