@@ -2,4 +2,3 @@ Brute Force Algorithm: 231 (Time: 0 ms)
 Graph with 6 nodes:
 Genetic Algorithm: 117 (Time: 349 ms)
 Nearest Neighbor Algorithm: 273 (Time: 0 ms)
-
