@@ -41,3 +41,87 @@ Graph with 212 nodes:
 Genetic Algorithm: 418 (Time: 113220 ms)
 Nearest Neighbor Algorithm: 792 (Time: 0 ms)
 
+Graph with 312 nodes:
+Genetic Algorithm: 514 (Time: 270043 ms)
+Nearest Neighbor Algorithm: 766 (Time: 0 ms)
+
+Graph with 412 nodes:
+Genetic Algorithm: 610 (Time: 507363 ms)
+Nearest Neighbor Algorithm: 927 (Time: 1 ms)
+
+Graph with 512 nodes:
+Genetic Algorithm: 775 (Time: 37967 ms)
+Nearest Neighbor Algorithm: 972 (Time: 1 ms)
+
+Graph with 612 nodes:
+Genetic Algorithm: 861 (Time: 59434 ms)
+Nearest Neighbor Algorithm: 1034 (Time: 2 ms)
+
+Graph with 712 nodes:
+Genetic Algorithm: 968 (Time: 87885 ms)
+Nearest Neighbor Algorithm: 1291 (Time: 3 ms)
+
+Graph with 812 nodes:
+Genetic Algorithm: 1066 (Time: 122470 ms)
+Nearest Neighbor Algorithm: 1266 (Time: 3 ms)
+
+Graph with 912 nodes:
+Genetic Algorithm: 1145 (Time: 170644 ms)
+Nearest Neighbor Algorithm: 1250 (Time: 5 ms)
+
+Graph with 1012 nodes:
+Genetic Algorithm: 1248 (Time: 257292 ms)
+Nearest Neighbor Algorithm: 1576 (Time: 8 ms)
+
+Graph with 1112 nodes:
+Genetic Algorithm: 1365 (Time: 419554 ms)
+Nearest Neighbor Algorithm: 1508 (Time: 13 ms)
+
+Graph with 1212 nodes:
+Genetic Algorithm: 1445 (Time: 666108 ms)
+Nearest Neighbor Algorithm: 1656 (Time: 18 ms)
+
+Graph with 1312 nodes:
+Genetic Algorithm: 1577 (Time: 1017166 ms)
+Nearest Neighbor Algorithm: 1748 (Time: 33 ms)
+
+Graph with 1412 nodes:
+Genetic Algorithm: 1618 (Time: 888313 ms)
+Nearest Neighbor Algorithm: 1823 (Time: 27 ms)
+
+Graph with 1512 nodes:
+Genetic Algorithm: 1713 (Time: 1543132 ms)
+Nearest Neighbor Algorithm: 2033 (Time: 12 ms)
+
+Graph with 1612 nodes:
+Genetic Algorithm: 1822 (Time: 1313214 ms)
+Nearest Neighbor Algorithm: 2125 (Time: 27 ms)
+
+Graph with 1712 nodes:
+Genetic Algorithm: 1949 (Time: 2008181 ms)
+Nearest Neighbor Algorithm: 2278 (Time: 62 ms)
+
+Graph with 1812 nodes:
+Genetic Algorithm: 2035 (Time: 1579332 ms)
+Nearest Neighbor Algorithm: 2236 (Time: 37 ms)
+
+Graph with 1912 nodes:
+Genetic Algorithm: 2079 (Time: 1146815 ms)
+Nearest Neighbor Algorithm: 2272 (Time: 19 ms)
+
+Graph with 2012 nodes:
+Genetic Algorithm: 2190 (Time: 1328698 ms)
+Nearest Neighbor Algorithm: 2395 (Time: 20 ms)
+
+Graph with 2112 nodes:
+Genetic Algorithm: 2324 (Time: 1504891 ms)
+Nearest Neighbor Algorithm: 2502 (Time: 23 ms)
+
+Graph with 2212 nodes:
+Genetic Algorithm: 2391 (Time: 1711424 ms)
+Nearest Neighbor Algorithm: 2568 (Time: 24 ms)
+
+Graph with 2312 nodes:
+Genetic Algorithm: 2561 (Time: 1931265 ms)
+Nearest Neighbor Algorithm: 2896 (Time: 28 ms)
+
