@@ -54,7 +54,7 @@ public:
 
         else if(V <= 500) {
             POP_SIZE = V;
-            gen_thres = V * 100;
+            gen_thres = V * 50;
         }
 
         else {
@@ -127,96 +127,106 @@ public:
         return f;
     }
 
-    individual reproduce(individual parent1, individual parent2, const vector<vector<int>>& map) {
-        // cout << "Reproducing..." << endl;
-        
-        int start = rand_num(1, V - 2); // Adjusted the range to ensure it stays within bounds
-        int end = rand_num(start + 1, V - 1); // Ensures end is greater than start and within bounds
-        // cout << "Start: " << start << ", End: " << end << endl;
+    individual reproduce(const individual& parent1, const individual& parent2, const vector<vector<int>>& map) {
+        int start = rand_num(1, parent1.path.size() - 2); // Adjusted the range to ensure it stays within bounds
+        int end = rand_num(start + 1, parent1.path.size() - 1); // Ensures end is greater than start and within bounds
         
         vector<int> childPath;
-        vector<bool> taken(V, false); // A vector to mark which cities are already taken
+        vector<bool> taken(parent1.path.size(), false); // A vector to mark which cities are already taken
 
         // Copy the segment from parent1
-        for (int i = start; i <= end; i++) {
-            // cout << "Pushing " << parent1.path[i] << " from parent1" << endl;
-            childPath.push_back(parent1.path[i]);
-            taken[parent1.path[i]] = true; // Mark the city as taken
-            // cout << "Child path size after push: " << childPath.size() << endl;
-        }
-
-        // Copy the remaining cities from parent2
-        for (int i = 0; i < V; i++) {
-            if (!taken[parent2.path[i]]) {
-                // cout << "Pushing " << parent2.path[i] << " from parent2" << endl;
-                childPath.push_back(parent2.path[i]);
-                taken[parent2.path[i]] = true; // Mark the city as taken
-                // cout << "Child path size after push: " << childPath.size() << endl;
+        for (int i = start; i <= end; ++i) {
+            if (i < parent1.path.size()) {
+                childPath.push_back(parent1.path[i]);
+                taken[parent1.path[i]] = true; // Mark the city as taken
             }
         }
 
-        // cout << "Creating child individual..." << endl;
+        // Copy the remaining cities from parent2
+        for (int city : parent2.path) {
+            if (!taken[city]) {
+                childPath.push_back(city);
+                taken[city] = true; // Mark the city as taken
+            }
+        }
 
         individual child;
-        child.path = childPath;
-        child.fitness = cal_fitness(childPath, map);
+        child.path = move(childPath); // Move childPath to child to avoid unnecessary copying
+        child.fitness = cal_fitness(child.path, map);
         return child;
     }
 
+
     // Genetic algorithm function for solving TSP
-    individual TSPUtil(const vector<vector<int>>& map) {
+    individual TSPUtil(const vector<vector<int>> map) {
         int gen = 1;
 
         vector<individual> population;
 
         // Initialize population
         srand(time(NULL));
-        for (int i = 0; i < POP_SIZE; i++) {
+        for (int i = 0; i < POP_SIZE - 1; i++) {
             individual temp;
             temp.path = createPath();
             temp.fitness = cal_fitness(temp.path, map);
             population.push_back(temp);
         }
 
-        population[0] = tspNeighbor(map, 0, V);
-
         // Initialize the best solution variable
-        shortestPathIndividual = population[0];
+        shortestPathIndividual = tspNeighbor(map, 0, V);
+        population.insert(population.begin(), shortestPathIndividual);
+
+        for(int i = 0; i < shortestPathIndividual.path.size(); i++){
+            cout << shortestPathIndividual.path[i] << " ";
+        }
+
+        cout << endl;
+
+        vector<individual> new_population;
+        individual parent1, parent2, child, mutatedIndividual;
 
         // Main loop of genetic algorithm
         while (gen <= gen_thres) {
+            // cout << "Starting generation " << gen << endl;
+
+            // Sort the population based on fitness
             sort(population.begin(), population.end(), [&](individual& t1, individual& t2) { return t1.fitness < t2.fitness; });
-            vector<individual> new_population;
 
             // Calculate the number of elite individuals to preserve
             int elite_count = POP_SIZE * ELITE_PERCENTAGE;
+            // cout << "Elite count: " << elite_count << endl;
 
             // Copy the elite individuals directly into the new population
             for (int i = 0; i < elite_count; i++) {
                 new_population.push_back(population[i]);
             }
+            // cout << "Elite individuals copied." << endl;
 
             // Reproduce the elite individuals to fill the rest of the population
             for (int i = 0; i < elite_count; i++) {
                 int r = rand_num(0, population.size() - 1);
-                individual parent1 = population[r];
+                parent1 = population[r];
                 r = rand_num(0, population.size() - 1);
-                individual parent2 = population[r];
-                individual child = reproduce(parent1, parent2, map);
+                parent2 = population[r];
+                child = reproduce(parent1, parent2, map);
                 new_population.push_back(child);
             }
 
-            int mutations = rand() % (POP_SIZE / 2) + 1;
+            // cout << "Elite individuals reproduced." << endl;
 
             // Mutate a portion of the population
+            int mutations = rand() % (POP_SIZE / 2) + 1;
+            // cout << "Mutations: " << mutations << endl;
+
             for (int i = 0; i < mutations; i++) {
-                individual mutatedIndividual = population[i];
+                mutatedIndividual = population[i];
                 mutatePath(mutatedIndividual.path);
                 mutatedIndividual.fitness = cal_fitness(mutatedIndividual.path, map);
                 new_population.push_back(mutatedIndividual);
             }
+            // cout << "Mutations applied." << endl;
 
-            //fill rest of population
+            // Fill the rest of the population
             while (new_population.size() < POP_SIZE) {
                 individual temp;
                 int random = rand() % POP_SIZE;
@@ -225,7 +235,11 @@ public:
                 new_population.push_back(temp);
             }
 
+            // cout << "Remaining population filled." << endl;
+
+            // Update the population
             population = new_population;
+            new_population.clear();
             gen++;
 
             // Update the best solution if a new best is found
@@ -233,6 +247,8 @@ public:
                 shortestPathIndividual = population[0];
                 cout << "Generation: " << gen << " Found a new Best Path: " << shortestPathIndividual.fitness << endl;
             }
+
+            // cout << "Generation " << gen << " complete." << endl;
         }
 
         cout << "Population evolved successfully!" << endl;
@@ -244,6 +260,7 @@ public:
         }
 
         cout << endl;
+
 
         return shortestPathIndividual;
     }

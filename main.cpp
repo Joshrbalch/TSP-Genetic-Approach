@@ -78,13 +78,13 @@ int main() {
 
             graph = generateMatrix(numNodes);
 
-            for(int i = 0; i < numNodes; i++){
-                for(int j = 0; j < numNodes; j++){
-                    cout << graph[i][j] << " ";
-                }
+            // for(int i = 0; i < numNodes; i++){
+            //     for(int j = 0; j < numNodes; j++){
+            //         cout << graph[i][j] << " ";
+            //     }
 
-                cout << endl;
-            }
+            //     cout << endl;
+            // }
         } 
         
         else if (input == "n") {
