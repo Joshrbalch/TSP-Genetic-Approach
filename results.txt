@@ -33,3 +33,11 @@ Graph with 12 nodes:
 Genetic Algorithm: 150 (Time: 422 ms)
 Nearest Neighbor Algorithm: 302 (Time: 0 ms)
 
+Graph with 112 nodes:
+Genetic Algorithm: 311 (Time: 28624 ms)
+Nearest Neighbor Algorithm: 631 (Time: 0 ms)
+
+Graph with 212 nodes:
+Genetic Algorithm: 418 (Time: 113220 ms)
+Nearest Neighbor Algorithm: 792 (Time: 0 ms)
+
