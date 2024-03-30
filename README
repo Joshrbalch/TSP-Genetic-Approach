@@ -1,0 +1,37 @@
+Traveling Salesman Problem Solver
+Overview
+
+This project aims to solve the Traveling Salesman Problem (TSP) using various algorithms implemented in C++. The TSP is a classic optimization problem where the goal is to find the shortest possible route that visits each city exactly once and returns to the original city.
+Features
+
+    Brute Force Algorithm: Solves the TSP by exhaustively searching through all possible permutations of cities.
+        DO NOT USE BRUTE FORCE WITH GRAPHS WHERE THE AMOUNT OF NODES EXCEEDS 13. IT WILL TAKE FOREVER.
+    Genetic Algorithm: Implements a genetic algorithm to find approximate solutions to the TSP.
+    Nearest Neighbor Algorithm: Utilizes the nearest neighbor heuristic to quickly find a feasible solution.
+    Nearest Neighbor All Algorithm: Runs the Nearest Neighbor Algorithm on all nodes and returns the best solution found.
+    Random Graph Generator: Generates random symmetric weighted graphs to test the algorithms and outputs generated graph to graph.graph.
+    Testing Suite: Includes a testing suite to evaluate the performance of each algorithm and compare their results.
+
+Directory Structure
+
+    All of the files are stored in this directory. TSP Algorithms.h contains all of the Algorithms defined above and in the main.cpp file.
+
+Usage
+
+    Clone the repository to your local machine.
+    Navigate to the project directory.
+    Compile the code using g++ main.cpp.
+        Or, if you want to compare different algorithms, g++ test.cpp
+    Run the executable to solve the TSP for specific instances or generate random graphs for testing.
+
+Dependencies
+
+    C++11 standard library
+
+Contributors
+
+    Joshua Balch - @joshrbalch
+
+License
+
+This project is licensed under the MIT License. See the LICENSE file for details.
